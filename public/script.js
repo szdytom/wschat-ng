@@ -158,7 +158,7 @@ async function send() {
     if (data.startsWith('/su')) {
         // a administrator login command.
         // now ask for passcode
-        const code = await open_prompt('Please input the passcode');
+        const code = await open_prompt('[su] Input the administration passcode');
         data = `/su ${code}`;
     }
 
