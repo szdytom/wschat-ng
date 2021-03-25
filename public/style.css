@@ -8,14 +8,14 @@ textarea {
     border: none;
 }
 
-input {
+input[type=checkbox] {
     background-color: #fcd363;
 }
 
-button {
+button, input[type=button] {
     border: none;
     padding: 10px;
-    border-radius: 5px;
+    border-radius: 2px;
     background-color: #5bb2ec;
     color: #fff;
 }
@@ -100,4 +100,50 @@ pre {
 
 .msg-from-cb {
     color: #000000;
+}
+
+#prompt-box {
+    width: 300px;
+    height: 120px;
+    position: absolute;
+    top: calc(50% - 180px);
+    left: calc(45% - 150px);
+}
+
+#prompt-box-title {
+    width: 100%;
+    height: 30px;
+    background-color: #606266;
+    display: block;
+    border-radius: 0px;
+    color: white;
+}
+
+#prompt-box-title-text {
+    margin-left: 10px;
+}
+
+#prompt-box-content {
+    height: 90px;
+    display: block;
+    background-color: #C0C4CC;
+    padding-top: 10px;
+}
+
+#prompt-data {
+    width: calc(100% - 20px);
+    margin: 0 auto;
+    border-radius: 2px;
+    border: 1px solid #606266;
+    display: block;
+    font-size: large;
+}
+
+#comfirm-prompt {
+    float: right;
+    margin-right: 10px;
+    display: block;
+    margin-top: 25px;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }

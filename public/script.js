@@ -2,7 +2,9 @@ let username;
 let is_reconnection = false;
 let last_command = null;
 const server = `ws://${location.host}`;
-const ws = init();
+let ws;
+
+init().then(x => ws = x).catch(err => console.log(err));
 
 function clear_message() {
     $('#message').empty();
@@ -14,34 +16,6 @@ function clear_send() {
 
 function format_time(time) {
     return `${time.getMonth() + 1}-${time.getDate()} ${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`;
-}
-
-if (String.prototype.replaceAll === undefined) {
-    String.prototype.replaceAll = function(before, after) {
-        let res = '';
-        let matched = 0;
-        for (let i = 0; i < this.length; i += 1) {
-            if (this[i] === before[matched]) {
-                matched += 1;
-                if (matched === before.length) {
-                    res += after;
-                    matched = 0;
-                }
-            } else {
-                for (let j = i - matched; j <= i; j += 1) {
-                    res += this[j];
-                }
-                matched = 0;
-
-            }
-        }
-
-        for (let i = this.length - matched; i < this.length; ++i) {
-            res += this[i];
-        }
-
-        return res;
-    };
 }
 
 function write_message(data) {
@@ -75,12 +49,15 @@ function write_message(data) {
     scroll_to_bottom();
 }
 
-function init() {
+async function init() {
+    $('#prompt-data').on('keyup', (e) => {
+        if (e.key === 'Enter') { $('#comfirm-prompt').click(); }
+    });
+
     clear_message();
-    login_name();
+    await login_name();
 
     const ws = new io(server);
-    console.log('ws: ', ws);
 
     ws.on('connect', () => {
         if (is_reconnection) {
@@ -132,18 +109,36 @@ function init() {
         });
     });
 
+    $('#send').focus();
+
     return ws;
 }
 
-function open_prompt(content, tilte) {
-    return window.prompt(content);
+function open_prompt(tilte) {
+    $('#prompt-box-title-text').text(tilte);
+    $('#prompt-data').val('');
+    $('#prompt-box').show('fast', () => { $('#prompt-data').focus(); });
+
+    let resolve_callback;
+    let res = new Promise((resolve) => {
+        resolve_callback = resolve;
+    });
+    
+    $('#comfirm-prompt').one('click', () => {
+        if (resolve_callback) {
+            $('#prompt-box').hide('fast');
+            resolve_callback($('#prompt-data').val());
+        }
+    });
+
+    return res;
 }
 
-function login_name() {
-    username = open_prompt('[Login] Input your name');
+async function login_name() {
+    username = await open_prompt('[Login] Input your name');
 }
 
-function send() {
+async function send() {
     let data = $('#send').val();
     if (data === '') {
         return;
@@ -163,7 +158,7 @@ function send() {
     if (data.startsWith('/su')) {
         // a administrator login command.
         // now ask for passcode
-        const code = open_prompt('Please input the passcode');
+        const code = await open_prompt('Please input the passcode');
         data = `/su ${code}`;
     }
 
@@ -186,10 +181,9 @@ function scroll_to_bottom() {
     }
 }
 
-
-document.addEventListener('keydown', function(key_event) {
+document.addEventListener('keydown', async function(key_event) {
     if (key_event.code === 'Enter' && key_event.ctrlKey) {
         key_event.preventDefault();
-        send();
+        await send();
     }
 });
