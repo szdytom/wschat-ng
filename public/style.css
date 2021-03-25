@@ -1,0 +1,103 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    overflow: hidden;
+}
+
+textarea {
+    border: none;
+}
+
+input {
+    background-color: #fcd363;
+}
+
+button {
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #5bb2ec;
+    color: #fff;
+}
+
+pre {
+    margin: 0;
+}
+
+.note {
+    margin-right: 5px;
+    color: #888888;
+}
+
+#message {
+    background-color: #f2f2f2;
+    margin: 0;
+    font-size: 20px;
+    padding: 20px;
+    height: 70vh;
+    width: calc(100vw - 20px);
+    color: #000;
+    font-family: 'Fira Code', Consolas, monospace;
+    overflow-y: scroll;
+    word-wrap: break-word;
+}
+
+#send {
+    background-color: #fff;
+    margin: 0;
+    font-size: 20px;
+    padding: 30px;
+    width: 100vw;
+    height: 30vh;
+}
+
+.send-button {
+    font-size: 20px;
+}
+
+.bottom-box {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+}
+
+.top-box {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.msg {
+    margin-top: 15px;
+}
+
+.msg-content {
+    color: #606266;
+}
+
+.msg-private::after {
+    content: " PRIVATE";
+    color: #F7BA2A;
+}
+
+.msg-from {
+    font-weight: 600;
+    color: #303133;
+}
+
+.msg-time {
+    font-weight: normal;
+    color: #C0C4CC;
+}
+
+.msg-from::before {
+    content: "@ ";
+}
+
+.msg-from-info {
+    color: #5bb2ec;
+}
+
+.msg-from-cb {
+    color: #000000;
+}

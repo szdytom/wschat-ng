@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>WebSocket Chat Room</title>
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+</head>
+
+<body>
+    <div id="message"></div>
+
+    <textarea id="send" placeholder="Say something" spellcheck="false"></textarea>
+    <div class="top-box">
+        <button class="send-button" onclick="clear_message()">Clear</button>
+        <p><input id="scroll-option" type="checkbox" checked /> Enable auto scroll</p>
+        <p>Version: WS_1.2</p>
+    </div>
+    <div class="bottom-box">
+        <span class="note">Press Ctrl + Enter to send </span>
+        <button class="send-button" onclick="send()">Send</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.0.0/dist/socket.io.min.js"></script>
+    <script src="./asset/jquery.js"></script>
+    <script src="./script.js"></script>
+</body>
+
+</html>
