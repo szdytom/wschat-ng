@@ -114,6 +114,7 @@ export function find_user(filter_string_raw: string, users: Map<string, User>, o
     if (/^\@R\([^\&]*\)\&\(.*\)$/.test(filter_string)) {
         const [, regex_filter, sub_filter] = filter_string.match(/^\@R\(([^\&]*)\)\&\((.*)\)$/);
         const target_regex = new RegExp(regex_filter);
+
         const sub_res = parse_lower(sub_filter);
         return sub_res
             .map(id => [users.get(id).name, id])
@@ -157,6 +158,8 @@ refreash_admin_passcode();
 export function grant_access(user: User, code: string) {
     if (admin_passcode === code) {
         user.is_administrator = true;
+        return true;
     }
+    return false;
 };
 

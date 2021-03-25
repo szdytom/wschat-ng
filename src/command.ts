@@ -6,10 +6,6 @@ export function is_command(cmd: string) {
     return cmd.startsWith('/');
 };
 
-function command_reply(msg: string, socket: Socket) {
-    socket.emit('command-block-reply', msg);
-}
-
 function mask_room_name(name: string) {
     if (name === 'global') {
         return name;
@@ -29,7 +25,9 @@ function unmask_room_name(name: string) {
     return null;
 }
 
-export function run_command(cmd: string, uid: string, users: Map<string, User>, io: SocketServer, silent: boolean = false) {
+export function run_command(cmd_raw: string, uid: string, users: Map<string, User>, io: SocketServer, silent: boolean = false) {
+    const cmd = cmd_raw.replace(/(^\s*)|(\s*$)/, '');
+    
     if (!is_command(cmd)) { return; }
 
     const user = users.get(uid);
@@ -37,6 +35,28 @@ export function run_command(cmd: string, uid: string, users: Map<string, User>, 
     const command_reply = (msg: string) => {
         if (silent) { return; }
         socket.emit('command-block-reply', msg);
+    };
+
+    const system_reply = (msg: string, socket: Socket) => {
+        socket.emit('system-message', msg);
+    };
+
+    const request_administrator_access = () => {
+        if (user.is_administrator) { return true; }
+
+        command_reply('You must be an administrator to run this command.');
+        return false;
+    };
+
+    const safe_find_user = (filter_string: string) => {
+        let res: string[];
+        try {
+            res = find_user(filter_string, users, uid);
+        } catch (err) {
+            res = [];
+        }
+
+        return res;
     };
 
     const cmd_set = cmd.split(/\s+/);
@@ -57,17 +77,25 @@ export function run_command(cmd: string, uid: string, users: Map<string, User>, 
     }
 
     if (cmd.startsWith('/ls')) {
-        if (cmd_set[1] === 'own') {
-            command_reply(JSON.stringify(
-                Array
-                .from(socket.rooms)
-                .map(x => unmask_room_name(x))
-                .filter(x => x !== null)
-            ));
+        if (cmd === '/ls') {
+            command_reply(JSON.stringify(all_rooms()));
+            return;
+        }
+        
+        const filter_string = cmd.substring('/ls'.length);
+        const target = safe_find_user(filter_string)[0];
+
+        if (target === undefined) {
+            command_reply('Target user not found.');
             return;
         }
 
-        command_reply(JSON.stringify(all_rooms()));
+        command_reply(JSON.stringify(
+            Array
+            .from(users.get(target).socket.rooms)
+            .map(x => unmask_room_name(x))
+            .filter(x => x !== null)
+        ));
         return;
     }
 
@@ -94,19 +122,28 @@ export function run_command(cmd: string, uid: string, users: Map<string, User>, 
     }
 
     if (cmd.startsWith('/ps')) {
-        let result = '[';
-        users.forEach(user => {
-            result += `"${user.name}",`;
-        });
-        result = result.substring(0, result.length - 1) + ']';
-        command_reply(result);
+        if (cmd === '/ps') {
+            command_reply(JSON.stringify(Array
+                .from(users)
+                .map(x => x[1].name)
+            ));
+            return;
+        }
+        
+        const filter_string = cmd.substring('/ps'.length);
+        const checked_user = safe_find_user(filter_string);
+        command_reply(JSON.stringify(Array
+            .from(users)
+            .filter(([id,]) => checked_user.includes(id))
+            .map(x => x[1].name)
+        ));
         return;
     }
 
     if (cmd.startsWith('/su')) {
         const code = cmd_set[1];
-        grant_access(user, code);
-        command_reply('You are administartor now.');
+        if (grant_access(user, code)) { command_reply('You are administartor now.'); }
+        else { command_reply('Code incorrect.'); }
         return;
     }
 
@@ -118,7 +155,27 @@ export function run_command(cmd: string, uid: string, users: Map<string, User>, 
 
     if (cmd.startsWith('/filter')) {
         const filter_string = cmd.substring('/filter'.length);
-        command_reply(JSON.stringify(find_user(filter_string, users, uid)));
+        command_reply(JSON.stringify(safe_find_user(filter_string)));
         return;
+    }
+
+    if (cmd.startsWith('/whois')) {
+        const id = cmd_set[1];
+        command_reply(users.get(id).name);
+        return;
+    }
+
+    if (cmd.startsWith('/kill')) {
+        if (!request_administrator_access()) { return; }
+
+        const filter_string = cmd.substring('/kill'.length);
+        const checked_user = safe_find_user(filter_string);
+        for (let id of checked_user) {
+            const target = users.get(id).socket;
+            system_reply('Your are killed.', target);
+            target.disconnect();
+        }
+
+        command_reply(JSON.stringify(checked_user));
     }
 };

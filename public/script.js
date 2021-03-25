@@ -100,12 +100,7 @@ function init() {
         ws.emit('set-name', username);
     });
 
-    ws.on('system-message', evt => {
-        let msg;
-        if (evt.type === 'join-room') {
-            msg = `${evt.data.user} joined room ${evt.data.room}.`;
-        }
-
+    ws.on('system-message', msg => {
         write_message({
             type: 'system-message',
             msg: msg,
