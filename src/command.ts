@@ -19,7 +19,7 @@ function unmask_room_name(name: string) {
     }
 
     if (name.startsWith('costum-room#')) {
-        return name.substring(12);
+        return name.substring('costum-room#'.length);
     }
 
     return null;
