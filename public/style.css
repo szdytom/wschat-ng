@@ -117,6 +117,7 @@ pre {
     display: block;
     border-radius: 0px;
     color: white;
+    font-size: 16px;
 }
 
 #prompt-box-title-text {
@@ -136,7 +137,7 @@ pre {
     border-radius: 2px;
     border: 1px solid #606266;
     display: block;
-    font-size: large;
+    font-size: 18px;
 }
 
 #comfirm-prompt {
