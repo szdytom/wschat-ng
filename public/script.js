@@ -35,13 +35,13 @@ function write_message(data) {
         message_source = 'COMMAND BLOCK';
     }
 
-    let renderd_message;
+    let rendered_message;
     if (!data.plain) {
-        renderd_message = md.render(message);
+        rendered_message = md.render(message);
     } else {
-        renderd_message = `<pre>${message}</pre>`;
+        rendered_message = `<pre>${message}</pre>`;
     }
-    renderd_message = DOMPurify.sanitize(renderd_message);
+    rendered_message = DOMPurify.sanitize(rendered_message);
 
     $('#message').append(`
 <div class="msg">
@@ -51,7 +51,7 @@ function write_message(data) {
     </span>
     <br>
     <span class="msg-content">
-        ${renderd_message}
+        ${rendered_message}
     </span>
 </div>
 `
@@ -61,7 +61,7 @@ function write_message(data) {
 
 async function init() {
     $('#prompt-data').on('keyup', (e) => {
-        if (e.key === 'Enter') { $('#comfirm-prompt').click(); }
+        if (e.key === 'Enter') { $('#confirm-prompt').click(); }
     });
 
     clear_message();
@@ -132,8 +132,8 @@ async function init() {
     return ws;
 }
 
-function open_prompt(tilte) {
-    $('#prompt-box-title-text').text(tilte);
+function open_prompt(title) {
+    $('#prompt-box-title').text(title);
     $('#prompt-data').val('');
     $('#prompt-box').show('fast', () => { $('#prompt-data').focus(); });
 
@@ -142,7 +142,7 @@ function open_prompt(tilte) {
         resolve_callback = resolve;
     });
 
-    $('#comfirm-prompt').one('click', () => {
+    $('#confirm-prompt').one('click', () => {
         if (resolve_callback) {
             $('#prompt-box').hide('fast');
             resolve_callback($('#prompt-data').val());

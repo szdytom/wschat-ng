@@ -12,20 +12,18 @@
     <textarea id="send" placeholder="Say something or run a command..." spellcheck="false"></textarea>
     <div class="top-box">
         <button class="send-button" onclick="clear_message()">Clear</button>
-        <p><input id="scroll-option" type="checkbox" checked /> Enable auto scroll</p>
-        <p>Version: WS_2.0</p>
+        <p class="note"><input id="scroll-option" type="checkbox" checked /> Enable auto scroll</p>
+        <p class="note">Version: WS_2.0</p>
     </div>
     <div class="bottom-box">
         <span class="note">Press Ctrl + Enter to send </span>
         <button class="send-button" onclick="send()">Send</button>
     </div>
     <div id="prompt-box" hidden>
-        <div id="prompt-box-title">
-            <soan id="prompt-box-title-text"></soan>
-        </div>
+        <div id="prompt-box-title"></div>
         <div id="prompt-box-content">
             <input type="text" id="prompt-data" />
-            <input type="button" value="OK" id="comfirm-prompt" />
+            <input type="button" value="OK" id="confirm-prompt" />
         </div>
     </div>
 
