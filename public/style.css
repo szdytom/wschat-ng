@@ -195,7 +195,7 @@ pre {
 }
 
 #prompt-data:focus {
-    border: var(--blue-50) 2px solid;
+    border: var(--blue-50) 1px solid;
     box-shadow: 0 0 0 1px var(--blue-50), 0 0 0 4px var(--blue-50-a30);
 }
 

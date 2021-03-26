@@ -186,6 +186,7 @@ function open_prompt(title) {
     $('#prompt-box-title').text(title);
     $('#prompt-data').val('');
     $('#prompt-box').show('fast', () => { $('#prompt-data').focus(); });
+    $('#prompt-background').show();
 
     let resolve_callback;
     let res = new Promise((resolve) => {
