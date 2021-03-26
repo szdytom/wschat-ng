@@ -15,21 +15,47 @@ input[type=checkbox] {
 button,
 input[type=button] {
     border: none;
-    padding: 10px 25px 10px 25px;
-    border-radius: 2px;
-    background-color: #0a84ff;
+    padding: 10px 8px 10px 8px;
+    min-width: 132px;
+    background-color: #0060df;
     color: #fff;
     border-radius: 5px;
 }
 
 button:hover,
 input[type=button]:hover {
-    border: none;
-    padding: 10px 25px 10px 25px;
-    border-radius: 2px;
-    background-color: #0060df;
-    color: #fff;
-    border-radius: 5px;
+    background-color: #003eaa;
+}
+
+button:active,
+input[type=button]:active {
+    background-color: #002275;
+}
+
+button:focus,
+input[type=button]:focus,
+button:focus-visible,
+input[type=button]:focus-visible {
+    box-shadow: 0 0 0 1px #0a84ff inset, 0 0 0 1px #0a84ff, 0 0 0 4px rgba(10, 132, 255, 0.3);
+}
+
+a {
+    color: #0060df;
+}
+
+a:hover {
+    text-decoration: underline;
+    text-decoration-color: #0060df;
+}
+
+a:active {
+    color: #003eaa;
+    text-decoration: underline;
+    text-decoration-color: #003eaa;
+}
+
+a:focus {
+    box-shadow: 0 0 0 2px #0a84ff, 0 0 0 6px rgba(10, 132, 255, 0.3);
 }
 
 pre {
@@ -156,14 +182,18 @@ pre {
 #prompt-data {
     width: calc(100% - 20px);
     margin: 0 auto;
-    border-radius: 2px;
     border-radius: 5px;
     padding: 8px;
-    color: #737373;
+    color: #0c0c0d;
     border: none;
     display: block;
     font-size: 15px;
+    border: rgba(12, 12, 13, 0.2) 1px solid;
+}
+
+#prompt-data:focus {
     border: #0a84ff 2px solid;
+    box-shadow: 0 0 0 1px #0a84ff, 0 0 0 4px rgba(10, 132, 255, 0.3);
 }
 
 #prompt-background {
