@@ -33,6 +33,8 @@ export function send_message({ msg, sender }: { msg: string; sender: string; }, 
     });
 }
 
+let disabled_commands: Map<string, boolean> = new Map();
+
 export function run_command(cmd_raw: string, uid: string, users: Map<string, User>, io: SocketServer, silent: boolean = false) {
     const cmd = cmd_raw.replace(/(^\s*)|(\s*$)/, '');
     
@@ -173,6 +175,18 @@ export function run_command(cmd_raw: string, uid: string, users: Map<string, Use
         command_reply(JSON.stringify(checked_user));
     });
 
+    admin_command_map.set('enable', () => {
+        const target_command = cmd_set[1];
+        disabled_commands.delete(target_command);
+        command_reply('Enabled.');
+    });
+
+    admin_command_map.set('disable', () => {
+        const target_command = cmd_set[1];
+        disabled_commands.set(target_command, true);
+        command_reply('Disabled.');
+    });
+
     command_map.set('anon', () => {
         send_message({ msg: msg, sender: 'Anonymous User'}, io, socket);
     });
@@ -206,6 +220,11 @@ export function run_command(cmd_raw: string, uid: string, users: Map<string, Use
         const [prefix, executor] = val;
         const command_prefix = '/' + prefix;
         if (cmd.startsWith(command_prefix)) {
+            if (!user.is_administrator && disabled_commands.get(prefix)) {
+                command_reply(`Command "${command_prefix}" has been disabled.`);
+                return;
+            }
+
             executor(command_prefix);
             return;
         }
