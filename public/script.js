@@ -2,9 +2,13 @@ let username;
 let is_reconnection = false;
 let last_command = null;
 const server = `ws://${location.host}`;
-let ws;
 
-init().then(x => ws = x).catch(err => console.log(err));
+let ws;
+let md;
+
+$(() => {
+    init().then(x => ws = x).catch(err => console.log(err))
+});
 
 function clear_message() {
     $('#message').empty();
@@ -31,9 +35,15 @@ function write_message(data) {
         message_source = 'COMMAND BLOCK';
     }
 
+    let renderd_message;
+    if (!data.plain) {
+        renderd_message = md.render(message);
+    } else {
+        renderd_message = `<pre>${message}</pre>`;
+    }
+    renderd_message = DOMPurify.sanitize(renderd_message);
 
-    $('#message').append(
-`
+    $('#message').append(`
 <div class="msg">
     <span class="msg-from ${message_class} ${(data.is_private ? 'msg-private' : '')}">
         ${message_source}
@@ -41,7 +51,7 @@ function write_message(data) {
     </span>
     <br>
     <span class="msg-content">
-        <pre>${message}</pre>
+        ${renderd_message}
     </span>
 </div>
 `
@@ -57,6 +67,9 @@ async function init() {
     clear_message();
     await login_name();
 
+    md = new remarkable.Remarkable();
+    md.inline.ruler.enable(['mark', 'sup', 'sub']);
+
     const ws = new io(server);
 
     ws.on('connect', () => {
@@ -65,12 +78,14 @@ async function init() {
                 from: 'INFO',
                 msg: 'Reconnected.',
                 is_private: true,
+                plain: true,
             });
         } else {
             write_message({
                 from: 'INFO',
                 msg: 'Connected.',
                 is_private: true,
+                plain: true,
             });
             is_reconnection = true;
         }
@@ -82,6 +97,7 @@ async function init() {
             type: 'system-message',
             msg: msg,
             is_private: true,
+            plain: true,
         });
     });
 
@@ -98,6 +114,7 @@ async function init() {
             type: 'command-block',
             msg: `>> ${last_command}\n<- ${data}`,
             is_private: true,
+            plain: true,
         });
     });
 
@@ -106,6 +123,7 @@ async function init() {
             type: 'system-message',
             msg: 'Disconnected.',
             is_private: true,
+            plain: true,
         });
     });
 
@@ -123,7 +141,7 @@ function open_prompt(tilte) {
     let res = new Promise((resolve) => {
         resolve_callback = resolve;
     });
-    
+
     $('#comfirm-prompt').one('click', () => {
         if (resolve_callback) {
             $('#prompt-box').hide('fast');
@@ -169,6 +187,7 @@ async function send() {
             type: 'system-message',
             msg: 'Socket not connected or has already disconnected. Failed to send.',
             is_private: true,
+            plain: true,
         });
     }
 
@@ -181,7 +200,7 @@ function scroll_to_bottom() {
     }
 }
 
-document.addEventListener('keydown', async function(key_event) {
+document.addEventListener('keydown', async function (key_event) {
     if (key_event.code === 'Enter' && key_event.ctrlKey) {
         key_event.preventDefault();
         await send();

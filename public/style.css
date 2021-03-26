@@ -103,7 +103,8 @@ pre {
 }
 
 #prompt-box {
-    width: 300px;
+    width: fit-content;
+    min-width: 300px;
     height: 120px;
     position: absolute;
     top: calc(50% - 180px);
@@ -122,6 +123,7 @@ pre {
 
 #prompt-box-title-text {
     margin-left: 10px;
+    margin-right: 10px;
 }
 
 #prompt-box-content {
