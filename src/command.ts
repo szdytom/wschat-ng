@@ -26,7 +26,7 @@ function unmask_room_name(name: string) {
 }
 
 export function send_message({ msg, sender }: { msg: string; sender: string; }, io: SocketServer, socket: Socket) {
-    io.in(Array.from(socket.rooms)).emit('new message', {
+    io.in(Array.from(socket.rooms).concat('global')).emit('new message', {
         type: 'text-message',
         data: msg,
         sender: sender,
