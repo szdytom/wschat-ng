@@ -4,7 +4,7 @@ import http_server = require('http');
 import path = require('path');
 
 import { kill_username, register_username, User } from './user';
-import { is_command, run_command } from './command';
+import { is_command, run_command, send_message } from './command';
 
 const app = Express();
 const http = new http_server.Server(app);
@@ -28,11 +28,10 @@ io.on('connection', socket => {
             return;
         }
 
-        io.in(Array.from(socket.rooms)).emit('new message', {
-            type: 'text-message',
-            data: msg,
+        send_message({
+            msg: msg,
             sender: user.name,
-        });
+        }, io, socket);
     });
 
     socket.on('set-name', name => {

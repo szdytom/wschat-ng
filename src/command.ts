@@ -25,6 +25,14 @@ function unmask_room_name(name: string) {
     return null;
 }
 
+export function send_message({ msg, sender }: { msg: string; sender: string; }, io: SocketServer, socket: Socket) {
+    io.in(Array.from(socket.rooms)).emit('new message', {
+        type: 'text-message',
+        data: msg,
+        sender: sender,
+    });
+}
+
 export function run_command(cmd_raw: string, uid: string, users: Map<string, User>, io: SocketServer, silent: boolean = false) {
     const cmd = cmd_raw.replace(/(^\s*)|(\s*$)/, '');
     
@@ -172,11 +180,7 @@ export function run_command(cmd_raw: string, uid: string, users: Map<string, Use
     });
 
     command_map.set('anon', () => {
-        io.in(Array.from(socket.rooms)).emit('new message', {
-            type: 'text-message',
-            data: msg,
-            sender: 'Anonymous User',
-        });
+        send_message({ msg: msg, sender: 'Anonymous User'}, io, socket);
     });
 
     if (user.is_administrator) {
