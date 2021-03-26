@@ -90,6 +90,14 @@ pre {
     color: #737373;
 }
 
+.msg-content > *:first-child {
+    margin-top: 0;
+}
+
+.msg-content > *:last-child {
+    margin-bottom: 0;
+}
+
 .msg-private::after {
     content: " PRIVATE";
     color: #ff9400;
