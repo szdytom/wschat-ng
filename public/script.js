@@ -39,7 +39,7 @@ function write_message(data) {
     if (!data.plain) {
         rendered_message = md.render(message);
     } else {
-        rendered_message = `<pre>${message}</pre>`;
+        rendered_message = `${message}`;
     }
     rendered_message = DOMPurify.sanitize(rendered_message);
 
@@ -67,7 +67,22 @@ async function init() {
     clear_message();
     await login_name();
 
-    md = new remarkable.Remarkable();
+    md = new remarkable.Remarkable({
+        highlight: function (str, lang) {
+            if (lang && hljs.getLanguage(lang)) {
+                try {
+                    return hljs.highlight(lang, str).value;
+                } catch (err) { }
+            }
+
+            try {
+                return hljs.highlightAuto(str).value;
+            } catch (err) { }
+
+            return '';
+        }
+    });
+
     md.inline.ruler.enable(['mark', 'sup', 'sub']);
 
     const ws = new io(server);
