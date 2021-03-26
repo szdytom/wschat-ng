@@ -40,8 +40,8 @@ function splite_toplevel_concat(filter_string: string) {
             matched += 1;
         } else if (c === ')') {
             matched -= 1;
-        } 
-        
+        }
+
         if (c === '+' && matched === 0) {
             res.push(buf);
             buf = '';
@@ -56,9 +56,9 @@ function splite_toplevel_concat(filter_string: string) {
 
 export function find_user(filter_string_raw: string, users: Map<string, User>, owner_id: string): string[] {
     const parse_lower = (filter: string) => {
-        return find_user(filter, users, owner_id);  
+        return find_user(filter, users, owner_id);
     };
-    
+
     // trim spaces (start and end)
     const filter_string = filter_string_raw.replace(/(^\s*)|(\s*$)/g, '');
 
@@ -149,7 +149,12 @@ export function find_user(filter_string_raw: string, users: Map<string, User>, o
 
 let admin_passcode: string;
 function refreash_admin_passcode() {
-    admin_passcode = Math.random().toString();
+    if (process.env.PASSCODE) {
+        admin_passcode = process.env.PASSCODE.toString();
+    } else {
+        admin_passcode = Math.random().toString();
+    }
+
     console.log('Admin passcode is:', admin_passcode);
     return admin_passcode;
 }

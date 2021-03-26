@@ -109,6 +109,15 @@ async function init() {
         });
     });
 
+    ws.on('private message', evt => {
+        write_message({
+            type: 'normal',
+            from: evt.sender,
+            msg: evt.data,
+            is_private: true,
+        });
+    })
+
     ws.on('command-block-reply', data => {
         write_message({
             type: 'command-block',
