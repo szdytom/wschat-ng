@@ -169,6 +169,7 @@ function open_prompt(title) {
     $('#confirm-prompt').one('click', () => {
         if (resolve_callback) {
             $('#prompt-box').hide('fast');
+            $('#prompt-background').hide();
             resolve_callback($('#prompt-data').val());
         }
     });

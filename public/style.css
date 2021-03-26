@@ -166,6 +166,16 @@ pre {
     border: #0a84ff 2px solid;
 }
 
+#prompt-background {
+    position: fixed;
+    top: 0;
+    right: 0;
+
+    height: 100vh;
+    width: 100vw;
+    background-color:#38383dCC;
+}
+
 #confirm-prompt {
     float: right;
     margin-top: 15px;
