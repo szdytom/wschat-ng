@@ -1,3 +1,5 @@
+@import 'proton-color.css';
+
 body {
     font-family: sans-serif;
     margin: 0;
@@ -9,7 +11,7 @@ textarea {
 }
 
 input[type=checkbox] {
-    background-color: #fcd363;
+    background-color: var(--yellow-50);
 }
 
 button,
@@ -17,45 +19,45 @@ input[type=button] {
     border: none;
     padding: 10px 8px 10px 8px;
     min-width: 132px;
-    background-color: #0060df;
+    background-color: var(--blue-60);
     color: #fff;
     border-radius: 5px;
 }
 
 button:hover,
 input[type=button]:hover {
-    background-color: #003eaa;
+    background-color: var(--blue-70);
 }
 
 button:active,
 input[type=button]:active {
-    background-color: #002275;
+    background-color: var(--blue-80);
 }
 
 button:focus,
 input[type=button]:focus,
 button:focus-visible,
 input[type=button]:focus-visible {
-    box-shadow: 0 0 0 1px #0a84ff inset, 0 0 0 1px #0a84ff, 0 0 0 4px rgba(10, 132, 255, 0.3);
+    box-shadow: 0 0 0 1px var(--blue-50) inset, 0 0 0 1px var(--blue-50), 0 0 0 4px var(--blue-50-a30);
 }
 
 a {
-    color: #0060df;
+    color: var(--blue-60);
 }
 
 a:hover {
     text-decoration: underline;
-    text-decoration-color: #0060df;
+    text-decoration-color: var(--blue-60);
 }
 
 a:active {
-    color: #003eaa;
+    color: var(--blue-70);
     text-decoration: underline;
-    text-decoration-color: #003eaa;
+    text-decoration-color: var(--blue-70);
 }
 
 a:focus {
-    box-shadow: 0 0 0 2px #0a84ff, 0 0 0 6px rgba(10, 132, 255, 0.3);
+    box-shadow: 0 0 0 2px var(--blue-50), 0 0 0 6px var(--blue-50-a30);
 }
 
 pre {
@@ -64,7 +66,7 @@ pre {
 
 .note {
     margin-right: 5px;
-    color: #737373;
+    color: var(--grey-50);
 }
 
 #message {
@@ -74,7 +76,7 @@ pre {
     padding: 20px;
     height: 70vh;
     width: calc(100vw - 20px);
-    color: #38383d;
+    color: var(--grey-70);
     font-family: 'Fira Code', Consolas, monospace;
     overflow-y: scroll;
     word-wrap: break-word;
@@ -113,7 +115,7 @@ pre {
 
 .msg-content {
     font-weight: 400;
-    color: #737373;
+    color: var(--grey-50);
 }
 
 .msg-content > *:first-child {
@@ -126,17 +128,17 @@ pre {
 
 .msg-private::after {
     content: " PRIVATE";
-    color: #ff9400;
+    color: var(--orange-50);
 }
 
 .msg-from {
     font-weight: 600;
-    color: #0c0c0d;
+    color: var(--grey-90);
 }
 
 .msg-time {
     font-weight: 400;
-    color: #b1b1b3;
+    color: var(--grey-40);
 }
 
 .msg-from::before {
@@ -144,11 +146,11 @@ pre {
 }
 
 .msg-from-info {
-    color: #0a84ff;
+    color: var(--blue-50);
 }
 
 .msg-from-cb {
-    color: #0c0c0d;
+    color: var(--grey-90);
 }
 
 #prompt-box {
@@ -184,16 +186,16 @@ pre {
     margin: 0 auto;
     border-radius: 5px;
     padding: 8px;
-    color: #0c0c0d;
+    color: var(--grey-90);
     border: none;
     display: block;
     font-size: 15px;
-    border: rgba(12, 12, 13, 0.2) 1px solid;
+    border: var(--grey-90-a20) 1px solid;
 }
 
 #prompt-data:focus {
-    border: #0a84ff 2px solid;
-    box-shadow: 0 0 0 1px #0a84ff, 0 0 0 4px rgba(10, 132, 255, 0.3);
+    border: var(--blue-50) 2px solid;
+    box-shadow: 0 0 0 1px var(--blue-50), 0 0 0 4px var(--blue-50-a30);
 }
 
 #prompt-background {
