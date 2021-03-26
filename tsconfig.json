@@ -1,0 +1,7 @@
+{
+    "compilerOptions": {
+        "downlevelIteration": true,
+        "removeComments": true,
+        "target": "ES5"
+    },
+}
