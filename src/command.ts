@@ -114,6 +114,8 @@ export function run_command(cmd_raw: string, uid: string, users: Map<string, Use
         } else {
             command_reply('Failed to rename.');
         }
+
+        socket.emit('change username', new_name);
     });
 
     command_map.set('whoami', () => {

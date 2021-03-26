@@ -5,6 +5,7 @@ const server = `ws://${location.host}`;
 
 let ws;
 let md;
+let unread_message = 0;
 
 $(() => {
     init().then(x => ws = x).catch(err => console.log(err))
@@ -59,12 +60,31 @@ function write_message(data) {
     scroll_to_bottom();
 }
 
+function notify_new_message(msg, is_private) {
+    if (document.visibilityState === 'visible') { return; }
+    unread_message += 1;
+    $('title').text(`(${unread_message} new message) WebSocket Chat Room`);
+    if (Notification.permission === 'granted' || is_private || msg.startsWith(`@${username}`) || msg.endsWith(`@${username}`)) {
+        const n = new Notification(`WS-Chat: You have ${unread_message} new messages unread.`);
+        setTimeout(() => { n.close() }, 3000);
+    }
+}
+
 async function init() {
     $('#prompt-data').on('keyup', (e) => {
         if (e.key === 'Enter') { $('#confirm-prompt').click(); }
     });
 
     clear_message();
+    
+    write_message({
+        type: 'system-message',
+        msg: 'Notification permission are use to get you infomated. Please allow it.',
+        is_private: true,
+        plain: true,
+    });
+    await Notification.requestPermission();
+    
     await login_name();
 
     md = new remarkable.Remarkable({
@@ -90,14 +110,14 @@ async function init() {
     ws.on('connect', () => {
         if (is_reconnection) {
             write_message({
-                from: 'INFO',
+                type: 'system-message',
                 msg: 'Reconnected.',
                 is_private: true,
                 plain: true,
             });
         } else {
             write_message({
-                from: 'INFO',
+                type: 'system-message',
                 msg: 'Connected.',
                 is_private: true,
                 plain: true,
@@ -116,12 +136,17 @@ async function init() {
         });
     });
 
+    ws.on('change username', new_name => {
+        username = new_name;
+    });
+
     ws.on('new message', evt => {
         write_message({
             type: 'normal',
             from: evt.sender,
             msg: evt.data,
         });
+        notify_new_message(evt.data, false);
     });
 
     ws.on('private message', evt => {
@@ -131,6 +156,7 @@ async function init() {
             msg: evt.data,
             is_private: true,
         });
+        notify_new_message(evt.data, true);
     })
 
     ws.on('command-block-reply', data => {
@@ -230,4 +256,9 @@ document.addEventListener('keydown', async function (key_event) {
         key_event.preventDefault();
         await send();
     }
+});
+
+document.addEventListener("visibilitychange", function() {
+    if (document.visibilityState === 'visible') { unread_message = 0; }
+    $('title').text(`WebSocket Chat Room`);
 });
