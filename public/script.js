@@ -48,8 +48,8 @@ function write_message(data) {
 <div class="msg">
     <span class="msg-from ${message_class} ${(data.is_private ? 'msg-private' : '')}">
         ${message_source}
-        <span class="msg-time">${format_time(new Date())}</span>
     </span>
+    <span class="msg-time">${format_time(new Date())}</span>
     <br>
     <span class="msg-content">
         ${rendered_message}

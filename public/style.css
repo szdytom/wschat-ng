@@ -137,6 +137,7 @@ pre {
 }
 
 .msg-time {
+    font-size: 15px;
     font-weight: 400;
     color: var(--grey-40);
 }
