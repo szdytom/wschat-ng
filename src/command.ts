@@ -49,13 +49,6 @@ export function run_command(cmd_raw: string, uid: string, users: Map<string, Use
         socket.emit('system-message', msg);
     };
 
-    const request_administrator_access = () => {
-        if (user.is_administrator) { return true; }
-
-        command_reply('You must be an administrator to run this command.');
-        return false;
-    };
-
     const safe_find_user = (filter_string: string) => {
         let res: string[];
         try {
@@ -69,6 +62,7 @@ export function run_command(cmd_raw: string, uid: string, users: Map<string, Use
 
     const cmd_set = cmd.split(/\s+/);
     const msg = cmd.replace(/^[^\n]+\n/m, '');
+    const cmd_only = (cmd.match(/(^[^\n]+)\n/m) || Array(2).fill(''))[1];
 
     const command_map: Map<string, (prefix: string) => void> = new Map();
     const admin_command_map: Map<string, (prefix: string) => void> = new Map();
@@ -181,6 +175,20 @@ export function run_command(cmd_raw: string, uid: string, users: Map<string, Use
 
     command_map.set('anon', () => {
         send_message({ msg: msg, sender: 'Anonymous User'}, io, socket);
+    });
+
+    command_map.set('msg', (prefix) => {
+        const filter_string = cmd_only.substring(prefix.length);
+        const checked_user = safe_find_user(filter_string);
+        Array
+            .from(users)
+            .filter(([id,]) => checked_user.includes(id))
+            .map(([, { socket }]) => socket)
+            .forEach(socket => socket.emit('private message', {
+                type: 'text-message',
+                data: msg,
+                sender: user.name,
+            }));
     });
 
     if (user.is_administrator) {
