@@ -149,11 +149,7 @@ export function find_user(filter_string_raw: string, users: Map<string, User>, o
 
 let admin_passcode: string;
 function refreash_admin_passcode() {
-    if (process.env.PASSCODE) {
-        admin_passcode = process.env.PASSCODE.toString();
-    } else {
-        admin_passcode = Math.random().toString();
-    }
+    admin_passcode = process.env.PASSCODE || Math.random().toString();
 
     console.log('Admin passcode is:', admin_passcode);
     return admin_passcode;
