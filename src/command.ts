@@ -60,6 +60,7 @@ export function run_command(cmd_raw: string, uid: string, users: Map<string, Use
     };
 
     const cmd_set = cmd.split(/\s+/);
+    const msg = cmd.replace(/^[^\n]+\n/m, '');
 
     if (cmd.startsWith('/disconnect')) {
         command_reply('Diconnecting. Bye!',);
@@ -177,5 +178,13 @@ export function run_command(cmd_raw: string, uid: string, users: Map<string, Use
         }
 
         command_reply(JSON.stringify(checked_user));
+    }
+
+    if (cmd.startsWith('/anon')) {
+        io.in(Array.from(socket.rooms)).emit('new message', {
+            type: 'text-message',
+            data: msg,
+            sender: 'Anonymous User',
+        });
     }
 };
