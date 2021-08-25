@@ -76,7 +76,7 @@ async function init() {
     });
 
     clear_message();
-    
+
     write_message({
         type: 'system-message',
         msg: 'Notification permission are use to get you informated. Please allow it.',
@@ -84,7 +84,7 @@ async function init() {
         plain: true,
     });
     await Notification.requestPermission();
-    
+
     await login_name();
 
     md = new remarkable.Remarkable({
@@ -204,8 +204,25 @@ function open_prompt(title) {
     return res;
 }
 
+async function get_url_query(query_name) {
+    return new Promise(resolve => {
+        var reg = new RegExp("(^|&)" + query_name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        var context = "";
+        if (r != null)
+            context = r[2];
+        reg = null;
+        r = null;
+        resolve(context == null || context == "" || context == "undefined" ? "" : context);
+    });
+}
+
 async function login_name() {
-    username = await open_prompt('[Login] Input your name');
+    username = await get_url_query("name")
+
+    if (username === undefined || username.length == 0) {
+        username = await open_prompt('[Login] Input your name');
+    }
 }
 
 async function send() {
@@ -259,7 +276,7 @@ document.addEventListener('keydown', async function (key_event) {
     }
 });
 
-document.addEventListener("visibilitychange", function() {
+document.addEventListener("visibilitychange", function () {
     if (document.visibilityState === 'visible') { unread_message = 0; }
     $('title').text(`WebSocket Chat Room`);
 });
