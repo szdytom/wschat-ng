@@ -23,6 +23,25 @@ function format_time(time) {
     return `${time.getMonth() + 1}-${time.getDate()} ${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`;
 }
 
+function render_chess(msg) {
+    if (!msg.toUpperCase().includes("!{LC}")) {
+        return msg;
+    }
+
+    url = msg.substring(msg.indexOf("(") + 1, msg.indexOf(")"));
+    if (url.length == 0) {
+        return msg;
+    }
+
+    if (url.toUpperCase() == "TV") {
+        return '<iframe src="https://lichess.org/tv/frame?theme=brown&pieceSet=staunty&bg=light" style="width: 400px; height: 444px;" allowtransparency="true" frameborder="0"></iframe>';
+    }
+    if (url.toUpperCase() == "TRAINING" || url.toUpperCase() == "PUZZLE") {
+        return `<iframe src="https://lichess.org/training/frame?theme=brown&pieceSet=staunty&bg=light" style="width: 400px; height: 444px;" allowtransparency="true" frameborder="0"></iframe>`;
+    }
+    return `<iframe src="https://lichess.org/embed/${url}?theme=brown&pieceSet=staunty&bg=light" width=600 height=397 frameborder=0></iframe>`;
+}
+
 function write_message(data) {
     const message = data.msg;
 
@@ -43,6 +62,8 @@ function write_message(data) {
         rendered_message = `${message}`;
     }
     rendered_message = DOMPurify.sanitize(rendered_message);
+
+    rendered_message = render_chess(rendered_message);
 
     $('#message').append(`
 <div class="msg">
