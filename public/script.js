@@ -42,6 +42,19 @@ function render_chess(msg) {
     return `<iframe src="https://lichess.org/embed/${url}?theme=brown&pieceSet=staunty&bg=light" width=600 height=397 frameborder=0></iframe>`;
 }
 
+function render_bilibili(msg) {
+    if (!msg.toUpperCase().includes("!{BI}")) {
+        return msg;
+    }
+
+    url = msg.substring(msg.indexOf("(") + 1, msg.indexOf(")"));
+    if (url.length == 0) {
+        return msg;
+    }
+
+    return `<iframe src="//player.bilibili.com/player.html?bvid=${url}&page=1&as_wide=1&high_quality=1&danmaku=0" allowfullscreen="allowfullscreen" width="600" height="397" scrolling="no" frameborder="0" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts"></iframe>`
+}
+
 function write_message(data) {
     const message = data.msg;
 
@@ -64,6 +77,7 @@ function write_message(data) {
     rendered_message = DOMPurify.sanitize(rendered_message);
 
     rendered_message = render_chess(rendered_message);
+    rendered_message = render_bilibili(rendered_message);
 
     $('#message').append(`
 <div class="msg">
