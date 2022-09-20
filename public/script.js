@@ -1,3 +1,12 @@
+import io from 'socket.io-client';
+import $ from 'jquery';
+import {Remarkable} from 'remarkable';
+import DOMPurify from 'dompurify';
+import rkatex from 'remarkable-katex';
+import hljs from 'highlightjs';
+import 'katex';
+
+
 let username;
 let is_reconnection = false;
 let last_command = null;
@@ -122,7 +131,7 @@ async function init() {
 
     await login_name();
 
-    md = new remarkable.Remarkable({
+    md = new Remarkable({
         highlight: function (str, lang) {
             if (lang && hljs.getLanguage(lang)) {
                 try {
@@ -137,7 +146,8 @@ async function init() {
             return '';
         }
     });
-
+    
+    md.use(rkatex);
     md.inline.ruler.enable(['mark', 'sup', 'sub']);
 
     const ws = new io(server);

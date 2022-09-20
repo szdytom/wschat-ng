@@ -44,7 +44,7 @@ io.on('connection', socket => {
     });
 });
 
-app.use('/', Express.static(path.join(__dirname, '../public')));
+app.use('/', Express.static(path.join(__dirname, '../public/dist')));
 
 const server_port = parseInt(process.env.PORT) | 4412;
 http.listen(server_port, () => {
