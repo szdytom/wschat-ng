@@ -13,13 +13,14 @@
 
     <textarea id="send" placeholder="Say something or run a command..." spellcheck="false"></textarea>
     <div class="top-box">
-        <button class="send-button" onclick="clear_message()">Clear</button>
+        <button class="send-button" id="clear-button">Clear</button>
         <p class="note"><input id="scroll-option" type="checkbox" checked /> Enable auto scroll</p>
         <p class="note">Version: SOCKET.IO-2.2</p>
     </div>
     <div class="bottom-box">
         <span class="note">Press Ctrl + Enter to send </span>
-        <button class="send-button" onclick="send()">Send</button>
+        <button class="send-button" id="uploader">Upload</button>
+        <button class="send-button" id="send-button">Send</button>
     </div>
 
     <div id="prompt-background" hidden></div>
@@ -30,6 +31,8 @@
             <input type="button" value="OK" id="confirm-prompt" />
         </div>
     </div>
+
+    <input type="file" id="real-uploader" hidden/>
 </body>
 
 </html>

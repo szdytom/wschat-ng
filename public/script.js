@@ -16,6 +16,8 @@ let ws;
 let md;
 let unread_message = 0;
 
+let assets = [];
+
 $(() => {
     init().then(x => ws = x).catch(err => console.log(err))
 });
@@ -222,6 +224,23 @@ async function init() {
         });
     });
 
+    $('#clear-button').click(function() {
+        clear_message();
+    });
+
+    $('#send-button').click(async function() {
+        await send();
+    })
+
+    $('#uploader').click(function() {
+        $('#real-uploader').click();
+    });
+
+    $('#real-uploader').change(async function() {
+        const content = await upload(this.files[0]);
+        $('#send').val($('#send').val() + content);
+    });
+
     $('#send').focus();
 
     return ws;
@@ -249,25 +268,44 @@ function open_prompt(title) {
     return res;
 }
 
-async function get_url_query(query_name) {
-    return new Promise(resolve => {
-        var reg = new RegExp("(^|&)" + query_name + "=([^&]*)(&|$)", "i");
-        var r = window.location.search.substr(1).match(reg);
-        var context = "";
-        if (r != null)
-            context = r[2];
-        reg = null;
-        r = null;
-        resolve(context == null || context == "" || context == "undefined" ? "" : context);
-    });
+function get_url_query(query_name) {
+    var reg = new RegExp("(^|&)" + query_name + "=([^&]*)(&|$)", "i");
+    var r = window.location.search.substr(1).match(reg);
+    var context = "";
+    if (r != null) {
+        context = r[2];
+    }
+    reg = null;
+    r = null;
+    return context == null || context == "" || context == "undefined" ? "" : context;
 }
 
 async function login_name() {
-    username = await get_url_query("name")
+    username = get_url_query("name");
 
     if (username === undefined || username.length == 0) {
         username = await open_prompt('[Login] Input your name');
     }
+}
+
+function encode_file(file) {
+    return new Promise((resolve,) => {
+        let reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (e) => {
+            resolve(e.target.result);
+        };
+    });
+}
+
+async function upload(file) {
+    const dataurl = await encode_file(file);
+    const id = assets.length;
+    assets.push(dataurl);
+    if (file.type.startsWith('image/')) {
+        return `![](%asset${id})`;
+    }
+    return `[](%asset${id})`;
 }
 
 async function send() {
@@ -286,6 +324,11 @@ async function send() {
         // a command
         last_command = data;
     }
+
+    for (let i in assets) {
+        data = data.replaceAll(`%asset${i}`, assets[i]);
+    }
+    assets = [];
 
     if (data.startsWith('/su')) {
         // a administrator login command.
