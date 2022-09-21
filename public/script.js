@@ -34,36 +34,9 @@ function format_time(time) {
     return `${time.getMonth() + 1}-${time.getDate()} ${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`;
 }
 
-function render_chess(msg) {
-    if (!msg.toUpperCase().includes("!{LC}")) {
-        return msg;
-    }
-
-    url = msg.substring(msg.indexOf("(") + 1, msg.indexOf(")"));
-    if (url.length == 0) {
-        return msg;
-    }
-
-    if (url.toUpperCase() == "TV") {
-        return '<iframe src="https://lichess.org/tv/frame?theme=brown&pieceSet=staunty&bg=light" style="width: 400px; height: 444px;" allowtransparency="true" frameborder="0"></iframe>';
-    }
-    if (url.toUpperCase() == "TRAINING" || url.toUpperCase() == "PUZZLE") {
-        return `<iframe src="https://lichess.org/training/frame?theme=brown&pieceSet=staunty&bg=light" style="width: 400px; height: 444px;" allowtransparency="true" frameborder="0"></iframe>`;
-    }
-    return `<iframe src="https://lichess.org/embed/${url}?theme=brown&pieceSet=staunty&bg=light" width=600 height=397 frameborder=0></iframe>`;
-}
-
-function render_bilibili(msg) {
-    if (!msg.toUpperCase().includes("!{BI}")) {
-        return msg;
-    }
-
-    url = msg.substring(msg.indexOf("(") + 1, msg.indexOf(")"));
-    if (url.length == 0) {
-        return msg;
-    }
-
-    return `<iframe src="//player.bilibili.com/player.html?bvid=${url}&page=1&as_wide=1&high_quality=1&danmaku=0" allowfullscreen="allowfullscreen" width="600" height="397" scrolling="no" frameborder="0" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts"></iframe>`
+function render_download(data) {
+    const reg = /\{\%download\s+([^\s]+)\s+([^\}]+)\}/g;
+    return data.replaceAll(reg, '<a href="$2" download="$1">Download $1</a>');
 }
 
 function write_message(data) {
@@ -87,8 +60,7 @@ function write_message(data) {
     }
     rendered_message = DOMPurify.sanitize(rendered_message);
 
-    rendered_message = render_chess(rendered_message);
-    rendered_message = render_bilibili(rendered_message);
+    rendered_message = render_download(rendered_message);
 
     $('#message').append(`
 <div class="msg">
@@ -151,6 +123,10 @@ async function init() {
     
     md.use(rkatex);
     md.inline.ruler.enable(['mark', 'sup', 'sub']);
+    
+    md.inline.validateLink = function() {
+        return true;
+    };
 
     const ws = new io();
 
@@ -209,7 +185,7 @@ async function init() {
     ws.on('command-block-reply', data => {
         write_message({
             type: 'command-block',
-            msg: `>> ${last_command}\n<- ${data}`,
+            msg: `>> ${last_command}<br/><- ${data}`,
             is_private: true,
             plain: true,
         });
@@ -305,7 +281,7 @@ async function upload(file) {
     if (file.type.startsWith('image/')) {
         return `![](%asset${id})`;
     }
-    return `[](%asset${id})`;
+    return `{%download ${file.name} %asset${id}}`;
 }
 
 async function send() {
