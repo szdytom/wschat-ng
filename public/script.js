@@ -11,7 +11,6 @@ import 'katex/dist/katex.min.css'
 let username;
 let is_reconnection = false;
 let last_command = null;
-const server = `ws://${location.host}`;
 
 let ws;
 let md;
@@ -151,7 +150,7 @@ async function init() {
     md.use(rkatex);
     md.inline.ruler.enable(['mark', 'sup', 'sub']);
 
-    const ws = new io(server);
+    const ws = new io();
 
     ws.on('connect', () => {
         if (is_reconnection) {
