@@ -4,7 +4,7 @@ import {Remarkable} from 'remarkable';
 import DOMPurify from 'dompurify';
 import rkatex from 'remarkable-katex';
 import hljs from 'highlightjs';
-import 'katex';
+import 'highlightjs/styles/tomorrow.css';
 
 
 let username;
