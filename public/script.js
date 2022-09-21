@@ -5,6 +5,7 @@ import DOMPurify from 'dompurify';
 import rkatex from 'remarkable-katex';
 import hljs from 'highlightjs';
 import 'highlightjs/styles/tomorrow.css';
+import 'katex/dist/katex.min.css'
 
 
 let username;
