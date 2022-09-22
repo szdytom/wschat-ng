@@ -4,9 +4,9 @@ import {Remarkable} from 'remarkable';
 import DOMPurify from 'dompurify';
 import rkatex from 'remarkable-katex';
 import hljs from 'highlightjs';
+
 import 'highlightjs/styles/tomorrow.css';
 import 'katex/dist/katex.min.css'
-
 
 let username;
 let is_reconnection = false;
@@ -97,7 +97,7 @@ async function init() {
 
     write_message({
         type: 'system-message',
-        msg: 'Notification permission are use to get you informated. Please allow it.',
+        msg: 'Notification permission are is to get you informated. Please allow it.',
         is_private: true,
         plain: true,
     });
