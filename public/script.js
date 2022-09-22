@@ -97,7 +97,7 @@ async function init() {
 
     write_message({
         type: 'system-message',
-        msg: 'Notification permission are is to get you informated. Please allow it.',
+        msg: 'Notification permission is used to get you informated. Please allow it.',
         is_private: true,
         plain: true,
     });
